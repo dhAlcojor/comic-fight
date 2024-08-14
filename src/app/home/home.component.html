@@ -24,15 +24,18 @@
       <div class="">
         <label class="">Vida inicial<small>(máx. 9999)</small></label>
         <input
+          id="leftCharacterHealth"
+          name="leftCharacterHealth"
           type="number"
           class="text-right"
           max="9999"
           [(ngModel)]="leftCharacterHealth"
+          required
         />
       </div>
       <div class="">
         <label class="">Vida inicial<small>(máx. 9999)</small></label>
-        <input type="number" max="9999" [(ngModel)]="rightCharacterHealth" />
+        <input id="rightCharacterHealth" name="rightCharacterHealth" type="number" max="9999" [value]="rightCharacterHealth()" [(ngModel)]="rightCharacterHealth" required />
       </div>
     </div>
   </main>

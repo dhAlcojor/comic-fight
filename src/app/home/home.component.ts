@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core'
+import { Component, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import {DEADPOOL, WOLVERINE} from "../characters/character";
@@ -15,6 +15,6 @@ export class HomeComponent {
   rightCharacter = WOLVERINE
   backgroundStyle = `background: linear-gradient(90deg, ${this.leftCharacter.secondaryColor} 0%, ${this.leftCharacter.mainColor} 33%, ${this.rightCharacter.mainColor} 67%, ${this.rightCharacter.secondaryColor} 100%);`
 
-  leftCharacterHealth = model(this.leftCharacter.health)
-  rightCharacterHealth = model(this.rightCharacter.health)
+  leftCharacterHealth = signal(this.leftCharacter.health)
+  rightCharacterHealth = signal(this.rightCharacter.health)
 }
