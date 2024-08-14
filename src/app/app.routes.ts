@@ -7,7 +7,7 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   {
-    path: 'fight/:leftCharacterHealth/:rightCharacterHealth',
+    path: 'fight/:leftCharacterInitialHealth/:rightCharacterInitialHealth',
     component: FightComponent,
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
