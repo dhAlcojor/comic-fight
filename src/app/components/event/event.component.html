@@ -1,0 +1,21 @@
+@if (event().type === "attack") {
+  <p [class]="'text-black text-' + event().alignment">
+    <!-- {{ event().who }} golpea y hace {{ event().damage }} de daño! -->
+    <!-- @if ((event() as AttackEvent).critical === true) {
+      <p
+        [class]="'font-fighter text-' + event().alignment"
+        [style.color]="event().color"
+      >
+        ¡Golpe Crítico!
+      </p>
+    } -->
+  </p>
+} @else {
+  // WinnerEvent
+  <p
+    [class]="'font-fighter mt-4 text-' + event().alignment"
+    [style.color]="event().color"
+  >
+    ¡{{ event().who }} se regenera!
+  </p>
+}

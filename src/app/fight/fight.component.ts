@@ -1,24 +1,20 @@
-import { Component, Input, OnInit, Signal, signal, WritableSignal } from '@angular/core'
-import {HealthBarComponent} from "../components/health-bar/health-bar.component";
-import {Character, DEADPOOL, WOLVERINE} from "../characters/character";
+import { Component, Input, OnInit, signal, WritableSignal } from "@angular/core"
+import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
+import {
+  AttackEvent,
+  Event,
+  EventComponent,
+} from "../components/event/event.component"
+import { HealthBarComponent } from "../components/health-bar/health-bar.component"
 
-type MessageType = "left" | "right"
-type Message = {
-  side: MessageType
-  text: string,
-  critical: boolean
-  color: string
-}
 const DELAY = 1000
 
 @Component({
-  selector: 'cf-fight',
+  selector: "cf-fight",
   standalone: true,
-  imports: [
-    HealthBarComponent
-  ],
-  templateUrl: './fight.component.html',
-  styleUrl: './fight.component.css',
+  imports: [HealthBarComponent, EventComponent],
+  templateUrl: "./fight.component.html",
+  styleUrl: "./fight.component.css",
 })
 export class FightComponent implements OnInit {
   leftCharacter = DEADPOOL
@@ -26,7 +22,7 @@ export class FightComponent implements OnInit {
   rightCharacter = WOLVERINE
   rightCharacterHealth = signal(this.rightCharacter.health)
   currentRound = signal(0)
-  messages = signal<Message[]>([])
+  events = signal<Event[]>([])
 
   @Input()
   set leftCharacterInitialHealth(value: number) {
@@ -49,57 +45,77 @@ export class FightComponent implements OnInit {
     while (this.leftCharacterHealth() > 0 && this.rightCharacterHealth() > 0) {
       await this.delay(DELAY)
       this.runRound()
-      console.log("while()", this.leftCharacterHealth(), this.rightCharacterHealth())
+      console.log(
+        "while()",
+        this.leftCharacterHealth(),
+        this.rightCharacterHealth(),
+      )
     }
+
+    this.declareWinner(
+      this.leftCharacterHealth() > 0 ? this.leftCharacter : this.rightCharacter,
+    )
   }
 
   runRound() {
     this.currentRound.set(this.currentRound() + 1)
-    const leftDamage = this.leftCharacter.getDamage()
-    let leftCritical = false
-    const rightDamage = this.rightCharacter.getDamage()
-    let rightCritical = false
-
-    if (leftDamage > 0) {
-      leftCritical = this.checkDamage(this.rightCharacterHealth, this.rightCharacter, leftDamage)
-    }
-    this.sendMessage('left', this.leftCharacter, leftDamage, leftCritical)
-    
-    if (rightDamage > 0) {
-      rightCritical = this.checkDamage(this.leftCharacterHealth, this.leftCharacter, rightDamage)
-    }
-    this.sendMessage('right', this.rightCharacter, rightDamage, rightCritical)
+    this.events.set([
+      ...this.events(),
+      this.checkDamage(
+        this.leftCharacter,
+        this.rightCharacter,
+        this.rightCharacterHealth,
+      ),
+    ])
+    this.events.set([
+      ...this.events(),
+      this.checkDamage(
+        this.rightCharacter,
+        this.leftCharacter,
+        this.leftCharacterHealth,
+      ),
+    ])
   }
 
-  checkDamage(health: WritableSignal<number>, character: Character, damage: number) {
+  checkDamage(
+    attacker: Character,
+    defender: Character,
+    defenderHealth: WritableSignal<number>,
+  ): Event {
+    const damage = attacker.getDamage()
     let critical = false
-    const newHealth = health() - damage
-    health.set(newHealth >= 0 ? newHealth : 0)
-    if (damage > character.damage[1] * 0.95) {
-      character.canAttack = false
+    const newHealth = defenderHealth() - damage
+    defenderHealth.set(newHealth >= 0 ? newHealth : 0)
+    if (damage > attacker.damage[1] * 0.95) {
+      defender.canAttack = false
       critical = true
     }
 
-    return critical
+    return {
+      type: "attack",
+      who: attacker.name,
+      damage,
+      alignment: attacker === this.leftCharacter ? "left" : "right",
+      text:
+        damage > 0
+          ? `¡${attacker.name} golpea y hace ${damage} de daño!`
+          : `¡${attacker.name} se regenera!`,
+      color: attacker.mainColor,
+    } as AttackEvent
   }
 
-  sendMessage(side: 'left' | 'right', character: Character, damage: number, critical: boolean) {
-    const message: Message = {
-      side,
-      text: "",
-      critical,
-      color: character.mainColor
+  declareWinner(character: Character) {
+    const event: Event = {
+      type: "winner",
+      who: character.name,
+      alignment: "center",
+      text: `¡${character.name} ha ganado!`,
+      color: character.mainColor,
     }
-    if (damage === 0) {
-      message.text = `¡${character.name} se regenera!`
-    } else {
-      message.text = `¡${character.name} golpea y hace ${damage} de daño!`
-    }
-
-    this.messages.set([...this.messages(), message])
+    this.events.set([...this.events(), event])
   }
 
   delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }
