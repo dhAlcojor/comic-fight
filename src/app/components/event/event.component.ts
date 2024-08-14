@@ -1,10 +1,11 @@
 import { Component, input } from "@angular/core"
 
 export type EventAlignment = "left" | "right" | "center"
-export type EventType = "attack" | "winner"
+export type EventType = "attack" | "dodge" | "regenerate" | "winner"
 export type Event = {
   type: EventType
-  who: string
+  attacker: string
+  defender: string
   alignment: EventAlignment
   color: string
   damage?: number

@@ -1,10 +1,15 @@
-@if (event().type === "attack") {
+@if (event().type === "regenerate") {
   <p [class]="'text-black text-' + event().alignment">
-    @if (event().damage) {
-      ¡{{ event().who }} golpea y hace {{ event().damage }} de daño!
-    } @else {
-      {{ event().who }} se regenera.
-    }
+    {{ event().attacker }} se regenera.
+  </p>
+} @else if (event().type === "dodge") {
+  <p [class]="'text-black text-' + event().alignment">
+    ¡{{ event().attacker }} ataca,<br />pero {{ event().defender }} esquiva el ataque!
+  </p>
+} @else if (event().type === "attack") {
+  <p [class]="'text-black text-' + event().alignment">
+    ¡{{ event().attacker }} golpea y hace {{ event().damage }} de daño!
+    
     @if (event().critical === true) {
       <p
         [class]="'font-fighter text-' + event().alignment"
@@ -15,10 +20,16 @@
     }
   </p>
 } @else {
-  <p
-    [class]="'font-fighter mt-4 text-' + event().alignment"
-    [style.color]="event().color"
-  >
-    ¡{{ event().who }} ha ganado!
-  </p>
+  @if (event().attacker.length === 0) {
+    <p class="font-fighter text-4xl mt-4 text-center">
+      DOBLE K.O.!
+    </p>
+  } @else {
+    <p
+      [class]="'font-fighter mt-4 text-' + event().alignment"
+      [style.color]="event().color"
+    >
+      ¡{{ event().attacker }} ha ganado!
+    </p>
+  }
 }

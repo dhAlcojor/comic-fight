@@ -41,6 +41,8 @@ export class FightComponent implements OnInit {
   resetGame() {
     this.leftCharacterHealth.set(this.leftCharacter.maxHealth)
     this.rightCharacterHealth.set(this.rightCharacter.maxHealth)
+    this.leftCharacter.canAttack = true
+    this.rightCharacter.canAttack = true
     this.currentRound.set(0)
     this.events.set([])
     this.gameOver.set(false)
@@ -59,9 +61,7 @@ export class FightComponent implements OnInit {
       )
     }
 
-    this.declareWinner(
-      this.leftCharacterHealth() > 0 ? this.leftCharacter : this.rightCharacter,
-    )
+    this.declareWinner()
     this.gameOver.set(true)
   }
 
@@ -90,31 +90,68 @@ export class FightComponent implements OnInit {
     defender: Character,
     defenderHealth: WritableSignal<number>,
   ): Event {
-    const damage = attacker.getDamage()
-    let critical = false
-    const newHealth = defenderHealth() - damage
-    defenderHealth.set(newHealth >= 0 ? newHealth : 0)
-    if (damage > attacker.damage[1] * 0.95) {
-      defender.canAttack = false
-      critical = true
-    }
+    if (attacker.canAttack) {
+      const isDodged = Math.random() < defender.dodgeRating
+      if (isDodged) {
+        return {
+          type: "dodge",
+          attacker: attacker.name,
+          defender: defender.name,
+          alignment: attacker === this.leftCharacter ? "left" : "right",
+          color: defender.mainColor,
+        }
+      }
 
-    return {
-      type: "attack",
-      who: attacker.name,
-      damage,
-      critical,
-      alignment: attacker === this.leftCharacter ? "left" : "right",
-      color: attacker.mainColor,
+      const damage = attacker.getDamage()
+      let critical = false
+      const newHealth = defenderHealth() - damage
+      defenderHealth.set(newHealth >= 0 ? newHealth : 0)
+      if (damage > attacker.damage[1] * 0.95) {
+        defender.canAttack = false
+        critical = true
+      }
+
+      return {
+        type: "attack",
+        attacker: attacker.name,
+        defender: defender.name,
+        damage,
+        critical,
+        alignment: attacker === this.leftCharacter ? "left" : "right",
+        color: attacker.mainColor,
+      }
+    } else {
+      attacker.canAttack = true
+      return {
+        type: "regenerate",
+        attacker: attacker.name,
+        defender: defender.name,
+        alignment: attacker === this.leftCharacter ? "left" : "right",
+        color: attacker.mainColor,
+      }
     }
   }
 
-  declareWinner(character: Character) {
+  declareWinner() {
+    if (this.leftCharacterHealth() === 0 && this.rightCharacterHealth() === 0) {
+      const event: Event = {
+        type: "winner",
+        attacker: "",
+        defender: "",
+        alignment: "center",
+        color: "black",
+      }
+      this.events.set([...this.events(), event])
+      return
+    }
+
+    const winner = this.leftCharacterHealth() > 0 ? this.leftCharacter : this.rightCharacter
     const event: Event = {
       type: "winner",
-      who: character.name,
+      attacker: winner.name,
+      defender: "",
       alignment: "center",
-      color: character.mainColor,
+      color: winner.mainColor,
     }
     this.events.set([...this.events(), event])
   }
