@@ -1,21 +1,20 @@
-import {Component, model, signal} from "@angular/core";
-import { Deadpool } from "../characters/deadpool";
-import { Wolverine } from "../characters/wolverine";
-import { RouterLink } from "@angular/router";
-import {FormsModule} from "@angular/forms";
+import { Component, model } from '@angular/core'
+import { RouterLink } from '@angular/router'
+import { FormsModule } from '@angular/forms'
+import {DEADPOOL, WOLVERINE} from "../characters/character";
 
 @Component({
-  selector: "cf-home",
+  selector: 'cf-home',
   standalone: true,
   imports: [RouterLink, FormsModule],
-  templateUrl: "./home.component.html",
-  styleUrl: "./home.component.css",
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  leftCharacter = new Deadpool();
-  rightCharacter = new Wolverine();
-  backgroundStyle = `background: linear-gradient(90deg, ${this.leftCharacter.secondaryColor} 0%, ${this.leftCharacter.mainColor} 33%, ${this.rightCharacter.mainColor} 67%, ${this.rightCharacter.secondaryColor} 100%);`;
+  leftCharacter = DEADPOOL
+  rightCharacter = WOLVERINE
+  backgroundStyle = `background: linear-gradient(90deg, ${this.leftCharacter.secondaryColor} 0%, ${this.leftCharacter.mainColor} 33%, ${this.rightCharacter.mainColor} 67%, ${this.rightCharacter.secondaryColor} 100%);`
 
-  leftCharacterHealth = model(1000);
-  rightCharacterHealth = model(1000);
+  leftCharacterHealth = model(this.leftCharacter.health)
+  rightCharacterHealth = model(this.rightCharacter.health)
 }

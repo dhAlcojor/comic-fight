@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 @layer base {
-    @font-face {
-        font-family: "Fatal Fighter";
-        font-display: swap;
-        src: url("/assets/fonts/Fatal Fighter.ttf") format("truetype");
-    }
+  @font-face {
+    font-family: "Fatal Fighter";
+    font-display: swap;
+    src: url("/assets/fonts/Fatal Fighter.ttf") format("truetype");
+  }
 }
 @layer utilities {
-    .bg-fighter {
-        @apply bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-600 text-transparent;
-    }
+  .bg-fighter {
+    @apply bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-600 text-transparent;
+  }
 }
 
 html,
 body {
-    @apply h-full;
+  @apply h-full;
 }
