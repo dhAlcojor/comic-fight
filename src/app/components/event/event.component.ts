@@ -6,12 +6,9 @@ export type Event = {
   type: EventType
   who: string
   alignment: EventAlignment
-  text: string
   color: string
-}
-export type AttackEvent = Event & {
-  damage: number
-  critical: boolean
+  damage?: number
+  critical?: boolean
 }
 
 @Component({

@@ -1,10 +1,7 @@
 import { Component, Input, OnInit, signal, WritableSignal } from "@angular/core"
+import { RouterLink } from "@angular/router"
 import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
-import {
-  AttackEvent,
-  Event,
-  EventComponent,
-} from "../components/event/event.component"
+import { Event, EventComponent } from "../components/event/event.component"
 import { HealthBarComponent } from "../components/health-bar/health-bar.component"
 
 const DELAY = 1000
@@ -12,7 +9,7 @@ const DELAY = 1000
 @Component({
   selector: "cf-fight",
   standalone: true,
-  imports: [HealthBarComponent, EventComponent],
+  imports: [HealthBarComponent, EventComponent, RouterLink],
   templateUrl: "./fight.component.html",
   styleUrl: "./fight.component.css",
 })
@@ -23,6 +20,7 @@ export class FightComponent implements OnInit {
   rightCharacterHealth = signal(this.rightCharacter.health)
   currentRound = signal(0)
   events = signal<Event[]>([])
+  gameOver = signal(false)
 
   @Input()
   set leftCharacterInitialHealth(value: number) {
@@ -37,6 +35,15 @@ export class FightComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.runFight()
+  }
+
+  resetGame() {
+    this.leftCharacterHealth.set(this.leftCharacter.maxHealth)
+    this.rightCharacterHealth.set(this.rightCharacter.maxHealth)
+    this.currentRound.set(0)
+    this.events.set([])
+    this.gameOver.set(false)
     this.runFight()
   }
 
@@ -55,6 +62,7 @@ export class FightComponent implements OnInit {
     this.declareWinner(
       this.leftCharacterHealth() > 0 ? this.leftCharacter : this.rightCharacter,
     )
+    this.gameOver.set(true)
   }
 
   runRound() {
@@ -95,13 +103,10 @@ export class FightComponent implements OnInit {
       type: "attack",
       who: attacker.name,
       damage,
+      critical,
       alignment: attacker === this.leftCharacter ? "left" : "right",
-      text:
-        damage > 0
-          ? `¡${attacker.name} golpea y hace ${damage} de daño!`
-          : `¡${attacker.name} se regenera!`,
       color: attacker.mainColor,
-    } as AttackEvent
+    }
   }
 
   declareWinner(character: Character) {
@@ -109,7 +114,6 @@ export class FightComponent implements OnInit {
       type: "winner",
       who: character.name,
       alignment: "center",
-      text: `¡${character.name} ha ganado!`,
       color: character.mainColor,
     }
     this.events.set([...this.events(), event])
