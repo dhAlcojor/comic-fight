@@ -26,6 +26,12 @@ export class Character {
   }
 
   getDamage(): number {
+    if (!this.canAttack) {
+      this.canAttack = true
+      return 0;
+    }
+
+    this.canAttack = true
     const [min, max] = this.damage
     return Math.floor(Math.random() * (max - min + 1) + min)
   }

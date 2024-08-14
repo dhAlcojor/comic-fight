@@ -1,11 +1,6 @@
 import { Component, Input, OnInit, signal } from '@angular/core'
 import {HealthBarComponent} from "../components/health-bar/health-bar.component";
-import {DEADPOOL, WOLVERINE} from "../characters/character";
-
-enum Phase {
-  PRE_COMBAT,
-  COMBAT,
-}
+import {Character, DEADPOOL, WOLVERINE} from "../characters/character";
 
 @Component({
   selector: 'cf-fight',
@@ -19,8 +14,8 @@ enum Phase {
 export class FightComponent implements OnInit {
   leftCharacter = DEADPOOL
   rightCharacter = WOLVERINE
-  currentPhase = signal(Phase.PRE_COMBAT)
   currentRound = signal(0)
+  messages = signal<string[]>([])
 
   @Input()
   set leftCharacterHealth(value: number) {
@@ -34,25 +29,58 @@ export class FightComponent implements OnInit {
     this.rightCharacter.maxHealth = value
   }
 
-  public get Phase() {
-    return Phase
-  }
-
   ngOnInit(): void {
     this.runFight()
   }
 
   runFight() {
-    this.currentPhase.set(Phase.COMBAT)
-
+    console.log("runFight()")
     while (this.leftCharacter.health > 0 && this.rightCharacter.health > 0) {
       setTimeout(() => {
+        console.log("setTimeout()")
         this.currentRound.set(this.currentRound() + 1)
         const leftDamage = this.leftCharacter.getDamage()
         const rightDamage = this.rightCharacter.getDamage()
-        this.leftCharacter.health -= leftDamage
-        this.rightCharacter.health -= rightDamage
+
+        if (leftDamage > 0) {
+          const leftCritical = this.checkDamage(this.rightCharacter, leftDamage)
+          this.sendMessage(this.leftCharacter, leftDamage, leftCritical)
+        } else {
+          
+        }
+        
+        if (rightDamage > 0) {
+          this.checkDamage(this.leftCharacter, rightDamage)
+        } else {
+
+        }
       }, 1000)
     }
+  }
+
+  checkDamage(character: Character, damage: number) {
+    let critical = false
+    character.health -= damage
+    if (damage > character.damage[1] * 0.9) {
+      character.canAttack = false
+      critical = true
+    }
+
+    return critical
+  }
+
+  sendMessage(character: Character, damage: number, critical: boolean) {
+    let message = ""
+    if (damage === 0) {
+      message = `${character.name} se regenera!`
+    } else {
+      message = `${character.name} golpea y hace ${damage} de daño!`
+      if (critical) {
+        message += " ¡Golpe crítico!"
+      }
+    }
+
+    console.log(message)
+    this.messages.set([...this.messages(), message])
   }
 }

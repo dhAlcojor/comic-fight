@@ -2,29 +2,22 @@
   <h1 class="text-4xl font-fighter text-center p-4 shadow-lg">Comic Fight</h1>
 </header>
 <main class="mt-4 flex flex-col justify-center items-center">
-  <h2 class="text-center">
-    {{ leftCharacter.name }} vs {{ rightCharacter.name }}
-  </h2>
-  @if (currentPhase() === Phase.PRE_COMBAT) {
-    <button
-      class="font-fighter text-xl bg-black text-white py-2 px-4 rounded-lg"
-    >
-      Fight!
-    </button>
-  } @else {
-    <div class="flex justify-around items-end">
-      <div class="w-1/3 flex flex-col justify-center">
-        <img [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle'" />
-        <img [src]="leftCharacter.logo" [alt]="leftCharacter.name + ' logo'" />
-        <cf-health-bar [value]="leftCharacter.health" [max]="leftCharacter.maxHealth" [fillColor]="leftCharacter.mainColor"></cf-health-bar>
-      </div>
-      <span class="font-fighter text-2xl">VS</span>
-      <div class="w-1/3">
-        <img class="-scale-x-100" [src]="rightCharacter.idle" [alt]="rightCharacter.name + ' idle'" />
-        <img [src]="rightCharacter.logo" [alt]="rightCharacter.name + ' logo'" />
-        <cf-health-bar [value]="rightCharacter.health" [max]="rightCharacter.maxHealth" [fillColor]="rightCharacter.mainColor"></cf-health-bar>
-      </div>
+  <div class="flex justify-around items-end">
+    <div class="w-1/3 flex flex-col justify-center">
+      <img [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle'" />
+      <img [src]="leftCharacter.logo" [alt]="leftCharacter.name + ' logo'" />
+      <cf-health-bar [value]="leftCharacter.health" [max]="leftCharacter.maxHealth" [fillColor]="leftCharacter.mainColor"></cf-health-bar>
     </div>
-    <div></div>
-  }
+    <span class="font-fighter text-2xl">VS</span>
+    <div class="w-1/3">
+      <img class="-scale-x-100" [src]="rightCharacter.idle" [alt]="rightCharacter.name + ' idle'" />
+      <img [src]="rightCharacter.logo" [alt]="rightCharacter.name + ' logo'" />
+      <cf-health-bar [value]="rightCharacter.health" [max]="rightCharacter.maxHealth" [fillColor]="rightCharacter.mainColor"></cf-health-bar>
+    </div>
+  </div>
+  <div class="border-2 border-black p-4">
+    @for (message of messages(); track $index) {
+      <p>{{ message }}</p>
+    }
+  </div>
 </main>
