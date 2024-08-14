@@ -1,0 +1,13 @@
+<header class="bg-fighter">
+  <h1 class="text-4xl font-fighter text-center p-4 shadow-lg">Combat Fight</h1>
+</header>
+<main class="mt-4 flex flex-col justify-center items-center">
+  <h2 class="text-center">{{leftCharacter.name}} vs {{rightCharacter.name}}</h2>
+  @if (currentPhase() === Phase.PRE_COMBAT) {
+    <button class="font-fighter text-xl bg-black text-white py-2 px-4 rounded-lg">Fight!</button>
+  } @else {
+    <p class="text-center">
+      <span class="font-fighter text-2xl">COMBAT</span>
+    </p>
+  }
+</main>

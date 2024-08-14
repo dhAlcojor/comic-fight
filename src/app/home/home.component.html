@@ -1,0 +1,42 @@
+<div class="h-full flex flex-col items-center pt-20" [style]="backgroundStyle">
+    <header class="p-8">
+        <h1 class="flex flex-col items-center text-8xl font-fighter">
+            <span class="bg-fighter drop-shadow-[7px_7px_0_black]">Comic</span>
+            <span class="bg-fighter drop-shadow-[7px_7px_0_black] -pl-4 pr-4"
+                >Fight</span
+            >
+        </h1>
+    </header>
+    <main class="">
+        <div class="flex gap-2 items-center justify-center">
+          <img
+            [src]="leftCharacter.portrait"
+            [alt]="leftCharacter.name + ' portrait'"
+          />
+          <span class="font-fighter text-6xl">VS</span>
+          <img
+            class="-scale-x-100"
+            [src]="rightCharacter.portrait"
+            [alt]="rightCharacter.name + ' portrait'"
+          />
+        </div>
+      <div class="flex justify-around gap-2 p-2 text-xl font-bold forms">
+        <div class="">
+          <label class="">Vida inicial<small>(máx. 9999)</small></label>
+          <input type="number" class="text-right" max="9999" [(ngModel)]="leftCharacterHealth" />
+        </div>
+        <div class="">
+          <label class="">Vida inicial<small>(máx. 9999)</small></label>
+          <input type="number" max="9999" [(ngModel)]="rightCharacterHealth" />
+        </div>
+      </div>
+    </main>
+    <a
+        class="font-fighter text-2xl p-4 bg-black text-white rounded-lg mt-2"
+        [routerLink]="['/fight', leftCharacterHealth(), rightCharacterHealth()]"
+        >Fight!</a
+    >
+    <footer class="text-center flex-1 flex flex-col justify-end pb-12">
+        <a class="font-bold border-b-2 border-dashed" routerLink="/about">About</a>
+    </footer>
+</div>
