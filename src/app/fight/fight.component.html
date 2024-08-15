@@ -1,7 +1,9 @@
 <div class="h-screen w-full bg-black">
   <div class="flex flex-col items-center h-screen max-w-[480px] mx-auto bg-white">
-    <header class="bg-fighter w-full">
-      <h1 class="text-4xl font-fighter text-center p-4 shadow-lg">Comic Fight</h1>
+    <header class="bg-fighter w-full flex justify-between items-center p-4 shadow-lg">
+      <a class="text-sm text-black" routerLink="/">Volver</a>
+      <h1 class="text-4xl font-fighter text-center">Comic Fight</h1>
+      <a class="text-sm text-black" routerLink="/about">Acerca de</a>
     </header>
     <main
       class="p-4 flex-1 flex flex-col justify-center items-center overflow-y-hidden"
@@ -56,9 +58,6 @@
     </main>
     @if (gameOver()) {
       <div class="flex gap-4 justify-center mb-4">
-        <a class="bg-black text-white px-4 py-2 rounded-lg" routerLink="/"
-          >Volver</a
-        >
         <button
           class="bg-black text-white px-4 py-2 rounded-lg"
           (click)="resetGame()"
