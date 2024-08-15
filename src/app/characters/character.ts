@@ -38,5 +38,23 @@ export class Character {
   }
 }
 
-export const DEADPOOL = new Character('Deadpool', 'assets/deadpool/deadpool-portrait.webp', 'assets/deadpool/deadpool-idle.webp', 'assets/deadpool/deadpool-logo.webp', '#b40d0d', '#000000', [10, 100], .25)
-export const WOLVERINE = new Character('Wolverine', 'assets/wolverine/wolverine-portrait.webp', 'assets/wolverine/wolverine-idle.webp', 'assets/wolverine/wolverine-logo.webp', '#c2c214', '#204B77', [10, 120], .20)
+export const DEADPOOL = new Character(
+  'Deadpool',
+  'assets/deadpool/deadpool-portrait.webp',
+  'assets/deadpool/deadpool-idle.webp',
+  'assets/deadpool/deadpool-logo.webp',
+  '#b40d0d',
+  '#000000',
+  [10, 100],
+  .25
+)
+export const WOLVERINE = new Character(
+  'Wolverine',
+  'assets/wolverine/wolverine-portrait.webp',
+  'assets/wolverine/wolverine-idle.webp',
+  'assets/wolverine/wolverine-logo.webp',
+  '#c2c214',
+  '#204B77',
+  [10, 120],
+  .20
+)
