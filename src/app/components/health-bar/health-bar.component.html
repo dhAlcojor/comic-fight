@@ -1,14 +1,18 @@
 <div class="h-6 relative">
+  <!-- Colored background -->
   <div
     class="absolute inset-0 rounded-lg"
     [style.background-color]="fillColor()"
   ></div>
+  <!-- Darken background -->
   <div class="absolute inset-0 bg-black/60 rounded-lg z-10"></div>
+  <!-- Fill -->
   <div
     class="absolute inset-0 rounded-lg z-20"
     [style.background-color]="fillColor()"
     [style.width.%]="fillWidth()"
   ></div>
+  <!-- Border -->
   <div
     class="absolute inset-0 border-2 rounded-md border-black bg-transparent z-30 text-xs text-center pt-[.15rem]"
   >
