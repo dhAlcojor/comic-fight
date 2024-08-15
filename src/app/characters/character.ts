@@ -18,8 +18,8 @@ export class Character {
     this.logo = logo
     this.mainColor = mainColor
     this.secondaryColor = secondaryColor
-    this.health = 0
-    this.maxHealth = 0
+    this.health = 500
+    this.maxHealth = 500
     this.damage = damage
     this.dodgeRating = dodgeRating
     this.canAttack = true
