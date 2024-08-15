@@ -1,4 +1,4 @@
-<div class="h-4 relative">
+<div class="h-6 relative">
   <div
     class="absolute inset-0 rounded-lg"
     [style.background-color]="fillColor()"
@@ -10,6 +10,8 @@
     [style.width.%]="fillWidth()"
   ></div>
   <div
-    class="absolute inset-0 border-2 rounded-md border-black bg-transparent z-30 text-xs text-center"
-  ></div>
+    class="absolute inset-0 border-2 rounded-md border-black bg-transparent z-30 text-xs text-center pt-[.15rem]"
+  >
+    <span class="bg-white/50 p-[.15rem] rounded-md">{{ value() }} / {{ max() }}</span>
+  </div>
 </div>

@@ -11,6 +11,10 @@ export type Event = {
   damage?: number
   critical?: boolean
 }
+export type RoundEvent = {
+  round: number,
+  events: [Event, Event]
+}
 
 @Component({
   selector: "cf-event",
@@ -20,5 +24,5 @@ export type Event = {
   styleUrl: "./event.component.css",
 })
 export class EventComponent {
-  event = input.required<Event>()
+  event = input.required<RoundEvent>()
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, signal, WritableSignal } from "@angular/core"
 import { RouterLink } from "@angular/router"
 import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
-import { Event, EventComponent } from "../components/event/event.component"
+import { Event, EventComponent, RoundEvent } from "../components/event/event.component"
 import { HealthBarComponent } from "../components/health-bar/health-bar.component"
 
 const DELAY = 1000
@@ -19,8 +19,10 @@ export class FightComponent implements OnInit {
   rightCharacter = WOLVERINE
   rightCharacterHealth = signal(this.rightCharacter.health)
   currentRound = signal(0)
-  events = signal<Event[]>([])
+  roundEvents = signal<RoundEvent[]>([])
+  winnerEvent = signal<Event | null>(null)
   gameOver = signal(false)
+  doubleKoBackgroundStyle = `linear-gradient(90deg, ${this.leftCharacter.mainColor} 0%, ${this.rightCharacter.mainColor} 100%)`
 
   @Input()
   set leftCharacterInitialHealth(value: number) {
@@ -35,6 +37,7 @@ export class FightComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("doubleKoBackgroundStyle", this.doubleKoBackgroundStyle)
     this.runFight()
   }
 
@@ -44,7 +47,8 @@ export class FightComponent implements OnInit {
     this.leftCharacter.canAttack = true
     this.rightCharacter.canAttack = true
     this.currentRound.set(0)
-    this.events.set([])
+    this.roundEvents.set([])
+    this.winnerEvent.set(null)
     this.gameOver.set(false)
     this.runFight()
   }
@@ -67,21 +71,23 @@ export class FightComponent implements OnInit {
 
   runRound() {
     this.currentRound.set(this.currentRound() + 1)
-    this.events.set([
-      ...this.events(),
-      this.checkDamage(
-        this.leftCharacter,
-        this.rightCharacter,
-        this.rightCharacterHealth,
-      ),
-    ])
-    this.events.set([
-      ...this.events(),
-      this.checkDamage(
-        this.rightCharacter,
-        this.leftCharacter,
-        this.leftCharacterHealth,
-      ),
+    const leftEvent = this.checkDamage(
+      this.leftCharacter,
+      this.rightCharacter,
+      this.rightCharacterHealth,
+    )
+    const rightEvent = this.checkDamage(
+      this.rightCharacter,
+      this.leftCharacter,
+      this.leftCharacterHealth,
+    )
+    const roundEvent: RoundEvent = {
+      round: this.currentRound(),
+      events: [leftEvent, rightEvent],
+    }
+    this.roundEvents.set([
+      roundEvent,
+      ...this.roundEvents(),
     ])
   }
 
@@ -141,7 +147,7 @@ export class FightComponent implements OnInit {
         alignment: "center",
         color: "black",
       }
-      this.events.set([...this.events(), event])
+      this.winnerEvent.set(event)
       return
     }
 
@@ -153,7 +159,7 @@ export class FightComponent implements OnInit {
       alignment: "center",
       color: winner.mainColor,
     }
-    this.events.set([...this.events(), event])
+    this.winnerEvent.set(event)
   }
 
   delay(ms: number) {

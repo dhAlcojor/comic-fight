@@ -34,10 +34,22 @@
           />
         </div>
       </div>
-      <div
-        class="w-full flex-1 border-2 border-black p-4 mt-4 rounded-lg overflow-y-auto"
-      >
-        @for (event of events(); track $index) {
+      <div class="w-full flex-1 flex flex-col gap-2 mt-4 overflow-y-auto">
+        @if (winnerEvent()) {
+          @if (winnerEvent()?.attacker?.length === 0) {
+            <p class="font-fighter text-4xl mt-4 text-center text-transparent" [style]="{'background-image': doubleKoBackgroundStyle, 'background-clip': 'text'}">
+              DOBLE K.O.!
+            </p>
+          } @else {
+            <p
+            [class]="'font-fighter mt-4 text-center'"
+            [style.color]="winnerEvent()?.color"
+            >
+              ¡{{ winnerEvent()?.attacker }} ha ganado!
+            </p>
+          }
+        }
+        @for (event of roundEvents(); track $index) {
           <cf-event [event]="event" />
         }
       </div>
