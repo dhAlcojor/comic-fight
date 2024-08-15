@@ -5,15 +5,15 @@
     @for (event of events; track $index) {
       @if (event.type === "regenerate") {
         <p [class]="'text-black text-' + event.alignment">
-          {{ event.attacker }} <strong class="text-green-600">se regenera</strong>.
+          {{ event.attacker }} <strong class="text-regenerate">se regenera</strong>.
         </p>
       } @else if (event.type === "dodge") {
         <p [class]="'text-black text-' + event.alignment">
-          ¡{{ event.attacker }} ataca,<br />pero {{ event.defender }} <strong class="text-blue-700">esquiva</strong> el ataque!
+          ¡{{ event.attacker }} ataca,<br />pero {{ event.defender }} <strong class="text-dodge">esquiva</strong> el ataque!
         </p>
       } @else if (event.type === "attack") {
         <p [class]="'text-black text-' + event.alignment">
-          ¡{{ event.attacker }} golpea y hace <strong class="text-red-600">{{ event.damage }} DMG</strong>!
+          ¡{{ event.attacker }} golpea y hace <strong class="text-damage">{{ event.damage }} DMG</strong>!
           
           @if (event.critical === true) {
             <p

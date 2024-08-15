@@ -1,0 +1,9 @@
+<header [class]="'bg-white w-full flex justify-between items-center p-4 shadow-lg' + (isSticky() ? ' sticky top-0' : '')">
+	<a class="text-sm text-black" routerLink="/">Volver</a>
+	<h1 class="text-4xl font-fighter text-center bg-fighter -pl-3 pr-3">Comic Fight</h1>
+	@if (showAboutLink()) {
+		<a class="text-sm text-black" routerLink="/about">Acerca de</a>
+	} @else {
+		<span></span>
+	}
+</header>

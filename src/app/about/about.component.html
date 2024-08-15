@@ -1,9 +1,54 @@
-<header>
-  <h1>About</h1>
-</header>
-<main>
+<cf-header class="w-full" [isSticky]="true" [showAboutLink]="false" />
+<main class="lg:max-w-[1200px] p-4">
+  <h2>Acerca de</h2>
   <section>
-    <h2>Fuente</h2>
+    <h3>¿Qué es esto?</h3>
+    <p>
+      Esta página es una aplicación web que simula un juego de lucha en el que los personajes luchan
+      automáticamente. La idea para esta aplicación parte de un <a href="https://youtu.be/u2Tn2H3pqjw?si=njpChI6YJYzy2KSn" target="_blank">reto de programación</a> que vi en el
+      canal de <a href="https://youtube.com/@mouredev" target="_blank">&#64;mouredev</a> en YouTube.
+    </p>
+    <p>
+      Puedes leer las instrucciones del reto en el <a href="https://github.com/dhAlcojor/comic-fight" target="_blank">README</a> del repositorio de GitHub en el que he
+      subido el código de esta aplicación. Los personajes luchan automáticamente de esta forma:
+    </p>
+    <ul>
+      <li>
+        En cada ronda empieza siempre el personaje de la izquierda (Deadpool).
+      </li>
+      <li>
+        Si el personaje puede atacar (explicación de esto más adelante), se calcula el <strong class="text-damage">daño</strong> que
+        va a hacer. Cada personaje tiene un rango de daño distinto.
+      </li>
+      <li>
+        Se calcula la probabilidad de <strong class="text-dodge">esquivar</strong> del personaje que defiende (cada personaje tiene una probabilidad distinta). Si el personaje esquiva,
+        no recibe daño.
+      </li>
+      <li>
+          <span>
+            Si el personaje no esquiva, recibe el daño calculado. Si el daño que hace el personaje atacante es mayor a un 95% de su daño máximo, se considera un golpe crítico y el personaje
+          que defiente no podrá atacar en el turno siguiente. Aquí he modificado ligeramente el
+          requisito original del reto, que indica que un golpe crítico se produce si el daño es igual
+          al máximo del personaje. Yo quería que hubiera un poco más de probabilidad de golpe crítico.
+          </span>
+          <br class="mb-2" />
+          <span class="ml-4">
+            Los requisitos del reto indican que cuando un personaje recibe un golpe crítico, no puede
+          atacar al turno siguiente y "<strong class="text-regenerate">regenera</strong>". Pero en realidad, no regenera vida. Esto lo voy a cambiar en una próxima versión de la aplicación para que sí regeneren vida y que resulten los combates más emocionantes.
+          </span>
+      </li>
+      <li>
+        Se muestra el resultado de la ronda en la pantalla.
+      </li>
+      <li>
+        Llegado un punto, si uno de los personajes se queda sin vida, se muestra un mensaje
+        indicando que ha perdido. Si ambos personajes se quedan sin vida, se muestra un mensaje
+        indicando que ha habido un "doble K.O.".
+      </li>
+    </ul>
+  </section>
+  <section>
+    <h3>Fuente</h3>
     <p>
       La fuente utilizada para el título de la aplicación y alguna cosa más se
       llama Fatal Fighter y está descargada de
@@ -13,7 +58,7 @@
     </p>
   </section>
   <section>
-    <h2>Sprites de los personajes</h2>
+    <h3>Sprites de los personajes</h3>
     <p>
       Las imágenes de los personajes son sprites del juego Marvel: Avengers
       Alliance y se han descargado de

@@ -1,0 +1,29 @@
+main {
+	h2 {
+		@apply text-2xl text-center;
+	}
+
+	h3 {
+		@apply text-xl;
+	}
+
+	section {
+		@apply pb-4 flex flex-col gap-2;
+
+		p {
+			
+		}
+
+		ul {
+			@apply list-disc list-inside pl-4;
+
+			li {
+				
+			}
+		}
+
+		a {
+			@apply font-bold border-b-[1px] border-black border-dashed;
+		}
+	}
+}

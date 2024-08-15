@@ -1,16 +1,17 @@
-import { afterNextRender, afterRender, Component, ElementRef, Input, OnInit, signal, ViewChild, WritableSignal } from "@angular/core"
+import { Component, ElementRef, Input, OnInit, signal, WritableSignal } from "@angular/core"
 import { RouterLink } from "@angular/router"
 import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
 import { Event, EventComponent, RoundEvent } from "../components/event/event.component"
 import { HealthBarComponent } from "../components/health-bar/health-bar.component"
 import { getRandomFromRange } from "../utils"
+import { HeaderComponent } from "../header/header.component";
 
 const DELAY = 1000
 
 @Component({
   selector: "cf-fight",
   standalone: true,
-  imports: [HealthBarComponent, EventComponent, RouterLink],
+  imports: [HealthBarComponent, EventComponent, RouterLink, HeaderComponent],
   templateUrl: "./fight.component.html",
   styleUrl: "./fight.component.css",
 })
