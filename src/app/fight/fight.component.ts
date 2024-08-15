@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, signal, WritableSignal } from "@angular/core"
+import { afterNextRender, afterRender, Component, ElementRef, Input, OnInit, signal, ViewChild, WritableSignal } from "@angular/core"
 import { RouterLink } from "@angular/router"
 import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
 import { Event, EventComponent, RoundEvent } from "../components/event/event.component"
 import { HealthBarComponent } from "../components/health-bar/health-bar.component"
+import { getRandomFromRange } from "../utils"
 
 const DELAY = 1000
 
@@ -16,31 +17,37 @@ const DELAY = 1000
 export class FightComponent implements OnInit {
   leftCharacter = DEADPOOL
   leftCharacterHealth = signal(this.leftCharacter.health)
+  leftCharacterIdleImage?: HTMLImageElement
   rightCharacter = WOLVERINE
   rightCharacterHealth = signal(this.rightCharacter.health)
+  rightCharacterIdleImage?: HTMLImageElement
   currentRound = signal(0)
   roundEvents = signal<RoundEvent[]>([])
   winnerEvent = signal<Event | null>(null)
   gameOver = signal(false)
   doubleKoBackgroundStyle = `linear-gradient(90deg, ${this.leftCharacter.mainColor} 0%, ${this.rightCharacter.mainColor} 100%)`
 
+  /** Input parameter read from the URL path */
   @Input()
   set leftCharacterInitialHealth(value: number) {
     this.leftCharacterHealth.set(value)
     this.leftCharacter.maxHealth = value
   }
 
+  /** Input parameter read from the URL path */
   @Input()
   set rightCharacterInitialHealth(value: number) {
     this.rightCharacterHealth.set(value)
     this.rightCharacter.maxHealth = value
   }
 
+  constructor(public elementRef: ElementRef) {}
+
   ngOnInit(): void {
-    console.log("doubleKoBackgroundStyle", this.doubleKoBackgroundStyle)
     this.runFight()
   }
 
+  /** Reset the game state and run it again */
   resetGame() {
     this.leftCharacterHealth.set(this.leftCharacter.maxHealth)
     this.rightCharacterHealth.set(this.rightCharacter.maxHealth)
@@ -53,22 +60,18 @@ export class FightComponent implements OnInit {
     this.runFight()
   }
 
+  /** Run the game where both characters play automatically */
   async runFight() {
-    console.log("runFight()")
     while (this.leftCharacterHealth() > 0 && this.rightCharacterHealth() > 0) {
       await this.delay(DELAY)
       this.runRound()
-      console.log(
-        "while()",
-        this.leftCharacterHealth(),
-        this.rightCharacterHealth(),
-      )
     }
 
     this.declareWinner()
     this.gameOver.set(true)
   }
 
+  /** Run the round where the left character plays first, then the right character */
   runRound() {
     this.currentRound.set(this.currentRound() + 1)
     const leftEvent = this.checkDamage(
@@ -91,6 +94,13 @@ export class FightComponent implements OnInit {
     ])
   }
 
+  /**
+   * Check if the attacker hits the defender, and update the health of the defender
+   * @param attacker The character that attacks
+   * @param defender The character that defends
+   * @param defenderHealth Signal of the defender's health
+   * @returns The event that describes the results of the attack
+   */
   checkDamage(
     attacker: Character,
     defender: Character,
@@ -116,6 +126,8 @@ export class FightComponent implements OnInit {
         defender.canAttack = false
         critical = true
       }
+
+      this.showDamage(attacker === this.leftCharacter ? "right" : "left", damage)
 
       return {
         type: "attack",
@@ -160,6 +172,23 @@ export class FightComponent implements OnInit {
       color: winner.mainColor,
     }
     this.winnerEvent.set(event)
+    const damageTexts = this.elementRef.nativeElement.querySelectorAll(".damage-text")
+    damageTexts.forEach((damageText: HTMLElement) => {
+      damageText.textContent = ""
+    })
+  }
+
+  showDamage(character: "left" | "right", damage: number) {
+    const el = this.elementRef.nativeElement
+    const image = el.querySelector(`#${character}CharacterIdleImage`) as HTMLImageElement
+    const boundingRect = image.getBoundingClientRect()
+    const damageText = el.querySelector(`#${character}DamageText`) as HTMLElement
+    const offset = 20
+    const x = getRandomFromRange(boundingRect.left + offset, boundingRect.right - offset)
+    const y = getRandomFromRange(boundingRect.top + offset, boundingRect.bottom - offset)
+    damageText.style.left = `${x}px`
+    damageText.style.top = `${y}px`
+    damageText.textContent = `-${damage.toString()}`
   }
 
   delay(ms: number) {

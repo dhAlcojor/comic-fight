@@ -1,3 +1,5 @@
+<span id="leftDamageText" class="damage-text"></span>
+<span id="rightDamageText" class="damage-text"></span>
 <div class="h-screen w-full bg-black">
   <div class="flex flex-col items-center h-screen max-w-[480px] mx-auto bg-white">
     <header class="bg-fighter w-full flex justify-between items-center p-4 shadow-lg">
@@ -5,12 +7,10 @@
       <h1 class="text-4xl font-fighter text-center">Comic Fight</h1>
       <a class="text-sm text-black" routerLink="/about">Acerca de</a>
     </header>
-    <main
-      class="p-4 flex-1 flex flex-col justify-center items-center overflow-y-hidden"
-    >
+    <main class="p-4 flex-1 flex flex-col justify-center items-center overflow-y-hidden">
       <div class="flex justify-around items-end">
         <div class="w-1/3 flex flex-col justify-center">
-          <img [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle'" />
+          <img id="leftCharacterIdleImage" [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle sprite'" />
           <img [src]="leftCharacter.logo" [alt]="leftCharacter.name + ' logo'" />
           <cf-health-bar
             [value]="leftCharacterHealth()"
@@ -21,9 +21,10 @@
         <span class="font-fighter text-2xl">VS</span>
         <div class="w-1/3 flex flex-col justify-center">
           <img
+            id="rightCharacterIdleImage"
             class="-scale-x-100"
             [src]="rightCharacter.idle"
-            [alt]="rightCharacter.name + ' idle'"
+            [alt]="rightCharacter.name + ' idle sprite'"
           />
           <img
             [src]="rightCharacter.logo"

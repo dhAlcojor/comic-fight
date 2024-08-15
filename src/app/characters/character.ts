@@ -1,3 +1,5 @@
+import { getRandomFromRange } from "../utils"
+
 export class Character {
   name: string
   portrait: string
@@ -26,15 +28,14 @@ export class Character {
   }
 
   getDamage(): number {
-    if (!this.canAttack) {
-      console.log(`${this.name} no puede atacar`)
-      this.canAttack = true
-      return 0;
+    let damage = 0
+    if (this.canAttack) {
+      const [min, max] = this.damage
+      damage = getRandomFromRange(min, max)
     }
 
     this.canAttack = true
-    const [min, max] = this.damage
-    return Math.floor(Math.random() * (max - min + 1) + min)
+    return damage;
   }
 }
 
