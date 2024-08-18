@@ -99,7 +99,6 @@ export class FightComponent implements OnInit {
       roundEvent,
       ...this.roundEvents(),
     ])
-    console.log(`round ${this.currentRound()}`, this.leftCharacterHealth(), this.rightCharacterHealth())
   }
 
   /**
@@ -211,7 +210,6 @@ export class FightComponent implements OnInit {
     const el = this.elementRef.nativeElement
     const image = el.querySelector(`#${character}CharacterIdleImage`) as HTMLImageElement
     const boundingRect = image.getBoundingClientRect()
-    //const damageText = el.querySelector(`#${character}DamageText`) as HTMLElement
     const offset = 20
     const x = getRandomFromRange(boundingRect.left + offset, boundingRect.right - offset)
     const y = getRandomFromRange(boundingRect.top + offset, boundingRect.bottom - offset)
@@ -220,9 +218,6 @@ export class FightComponent implements OnInit {
       left: x,
       top: y,
     }])
-    // damageText.style.left = `${x}px`
-    // damageText.style.top = `${y}px`
-    // damageText.textContent = `-${damage.toString()}`
   }
 
   delay(ms: number) {
