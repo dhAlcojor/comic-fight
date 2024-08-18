@@ -93,6 +93,7 @@ export class FightComponent implements OnInit {
       roundEvent,
       ...this.roundEvents(),
     ])
+    console.log(`round ${this.currentRound()}`, this.leftCharacterHealth(), this.rightCharacterHealth())
   }
 
   /**
@@ -141,10 +142,21 @@ export class FightComponent implements OnInit {
       }
     } else {
       attacker.canAttack = true
+      let regen = 0
+      if (attacker === this.leftCharacter) {
+        regen = Math.floor(this.leftCharacter.maxHealth * attacker.regenerationRating)
+        console.log("regenerating", this.leftCharacterHealth(), regen)
+        this.leftCharacterHealth.set(this.leftCharacterHealth() + regen)
+      } else {
+        regen = Math.floor(this.rightCharacter.maxHealth * attacker.regenerationRating)
+        console.log("regenerating", this.rightCharacterHealth(), regen)
+        this.rightCharacterHealth.set(this.rightCharacterHealth() + regen)
+      }
       return {
         type: "regenerate",
         attacker: attacker.name,
         defender: defender.name,
+        regen,
         alignment: attacker === this.leftCharacter ? "left" : "right",
         color: attacker.mainColor,
       }

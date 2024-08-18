@@ -5,7 +5,7 @@
     @for (event of events; track $index) {
       @if (event.type === "regenerate") {
         <p [class]="'text-black text-' + event.alignment">
-          {{ event.attacker }} <strong class="text-regenerate">se regenera</strong>.
+          {{ event.attacker }} <strong class="text-regenerate">regenera {{event.regen}} HP</strong>.
         </p>
       } @else if (event.type === "dodge") {
         <p [class]="'text-black text-' + event.alignment">

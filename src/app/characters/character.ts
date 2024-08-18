@@ -12,8 +12,9 @@ export class Character {
   damage: [number, number]
   dodgeRating: number
   canAttack: boolean
+  regenerationRating: number
 
-  constructor(name: string, portrait: string, idle: string, logo: string, mainColor: string, secondaryColor: string, damage: [number, number], dodgeRating: number) {
+  constructor(name: string, portrait: string, idle: string, logo: string, mainColor: string, secondaryColor: string, damage: [number, number], dodgeRating: number, regenerationRating: number) {
     this.name = name
     this.portrait = portrait
     this.idle = idle
@@ -25,6 +26,7 @@ export class Character {
     this.damage = damage
     this.dodgeRating = dodgeRating
     this.canAttack = true
+    this.regenerationRating = regenerationRating
   }
 
   getDamage(): number {
@@ -47,7 +49,8 @@ export const DEADPOOL = new Character(
   '#b40d0d',
   '#000000',
   [10, 100],
-  .25
+  .25,
+  .10
 )
 export const WOLVERINE = new Character(
   'Wolverine',
@@ -57,5 +60,6 @@ export const WOLVERINE = new Character(
   '#c2c214',
   '#204B77',
   [10, 120],
-  .20
+  .20,
+  .05
 )

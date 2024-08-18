@@ -9,6 +9,7 @@ export type Event = {
   alignment: EventAlignment
   color: string
   damage?: number
+  regen?: number
   critical?: boolean
 }
 export type RoundEvent = {
