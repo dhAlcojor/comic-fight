@@ -1,5 +1,10 @@
-<span id="leftDamageText" class="damage-text"></span>
-<span id="rightDamageText" class="damage-text"></span>
+<!-- <span id="leftDamageText" class="damage-text"></span>
+<span id="rightDamageText" class="damage-text"></span> -->
+<div class="relative">
+  @for (hpEvent of hpEvents(); track $index) {
+    <cf-hp-event [hpEvent]="hpEvent" />
+  }
+</div>
 <div class="h-screen w-full bg-black">
   <div class="flex flex-col items-center h-screen max-w-[480px] mx-auto bg-white">
     <cf-header class="w-full" />

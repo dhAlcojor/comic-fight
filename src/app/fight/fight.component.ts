@@ -1,19 +1,21 @@
 import { Component, ElementRef, Input, OnInit, signal, WritableSignal } from "@angular/core"
 import { RouterLink } from "@angular/router"
 import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
-import { Event, EventComponent, RoundEvent } from "../components/event/event.component"
+import { Event, EventComponent, HPEvent, RoundEvent } from "../components/event/event.component"
 import { HealthBarComponent } from "../components/health-bar/health-bar.component"
 import { getRandomFromRange } from "../utils"
 import { HeaderComponent } from "../header/header.component";
+import { HpEventComponent } from "../components/hp-event/hp-event.component";
 
 const DELAY = 1000
 
 @Component({
   selector: "cf-fight",
   standalone: true,
-  imports: [HealthBarComponent, EventComponent, RouterLink, HeaderComponent],
+  imports: [HealthBarComponent, EventComponent, RouterLink, HeaderComponent, HpEventComponent],
   templateUrl: "./fight.component.html",
   styleUrl: "./fight.component.css",
+  animations: [],
 })
 export class FightComponent implements OnInit {
   leftCharacter = DEADPOOL
@@ -24,6 +26,7 @@ export class FightComponent implements OnInit {
   rightCharacterIdleImage?: HTMLImageElement
   currentRound = signal(0)
   roundEvents = signal<RoundEvent[]>([])
+  hpEvents = signal<HPEvent[]>([])
   winnerEvent = signal<Event | null>(null)
   gameOver = signal(false)
   doubleKoBackgroundStyle = `linear-gradient(90deg, ${this.leftCharacter.mainColor} 0%, ${this.rightCharacter.mainColor} 100%)`
@@ -108,6 +111,7 @@ export class FightComponent implements OnInit {
     defender: Character,
     defenderHealth: WritableSignal<number>,
   ): Event {
+    const side = attacker === this.leftCharacter ? "left" : "right"
     if (attacker.canAttack) {
       const isDodged = Math.random() < defender.dodgeRating
       if (isDodged) {
@@ -115,7 +119,7 @@ export class FightComponent implements OnInit {
           type: "dodge",
           attacker: attacker.name,
           defender: defender.name,
-          alignment: attacker === this.leftCharacter ? "left" : "right",
+          alignment: side,
           color: defender.mainColor,
         }
       }
@@ -129,7 +133,7 @@ export class FightComponent implements OnInit {
         critical = true
       }
 
-      this.showDamage(attacker === this.leftCharacter ? "right" : "left", damage)
+      this.showDamage(attacker === this.leftCharacter ? "right" : "left", -damage)
 
       return {
         type: "attack",
@@ -137,7 +141,7 @@ export class FightComponent implements OnInit {
         defender: defender.name,
         damage,
         critical,
-        alignment: attacker === this.leftCharacter ? "left" : "right",
+        alignment: side,
         color: attacker.mainColor,
       }
     } else {
@@ -152,12 +156,13 @@ export class FightComponent implements OnInit {
         console.log("regenerating", this.rightCharacterHealth(), regen)
         this.rightCharacterHealth.set(this.rightCharacterHealth() + regen)
       }
+      this.showDamage(side, regen)
       return {
         type: "regenerate",
         attacker: attacker.name,
         defender: defender.name,
         regen,
-        alignment: attacker === this.leftCharacter ? "left" : "right",
+        alignment: side,
         color: attacker.mainColor,
       }
     }
@@ -195,13 +200,18 @@ export class FightComponent implements OnInit {
     const el = this.elementRef.nativeElement
     const image = el.querySelector(`#${character}CharacterIdleImage`) as HTMLImageElement
     const boundingRect = image.getBoundingClientRect()
-    const damageText = el.querySelector(`#${character}DamageText`) as HTMLElement
+    //const damageText = el.querySelector(`#${character}DamageText`) as HTMLElement
     const offset = 20
     const x = getRandomFromRange(boundingRect.left + offset, boundingRect.right - offset)
     const y = getRandomFromRange(boundingRect.top + offset, boundingRect.bottom - offset)
-    damageText.style.left = `${x}px`
-    damageText.style.top = `${y}px`
-    damageText.textContent = `-${damage.toString()}`
+    this.hpEvents.set([...this.hpEvents(), {
+      hpChange: damage,
+      left: x,
+      top: y,
+    }])
+    // damageText.style.left = `${x}px`
+    // damageText.style.top = `${y}px`
+    // damageText.textContent = `-${damage.toString()}`
   }
 
   delay(ms: number) {

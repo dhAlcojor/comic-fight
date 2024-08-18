@@ -1,0 +1,4 @@
+span {
+	@apply absolute font-fighter text-4xl z-30;
+	-webkit-text-stroke: 1px white;
+}

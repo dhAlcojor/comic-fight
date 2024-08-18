@@ -16,6 +16,11 @@ export type RoundEvent = {
   round: number,
   events: [Event, Event]
 }
+export type HPEvent = {
+  hpChange: number
+  left: number
+  top: number
+}
 
 @Component({
   selector: "cf-event",
