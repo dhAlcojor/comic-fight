@@ -29,3 +29,5 @@ Requisitos:
 3. Muestra qué pasa en cada turno.
 4. Muestra la vida en cada turno.
 5. Muestra el resultado final.
+
+**NOTA**: He dejado el README original de Angular [aquí](./README.original.md).
