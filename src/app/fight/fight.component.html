@@ -11,8 +11,8 @@
     <main class="p-4 flex-1 flex flex-col justify-center items-center overflow-y-hidden">
       <div class="flex justify-around items-end">
         <div class="w-1/3 flex flex-col justify-center">
-          <img id="leftCharacterIdleImage" [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle sprite'" />
-          <img [src]="leftCharacter.logo" [alt]="leftCharacter.name + ' logo'" />
+          <img id="leftCharacterIdleImage" [class]="leftLoserClass()" [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle sprite'" />
+          <img [class]="leftLoserClass()" [src]="leftCharacter.logo" [alt]="leftCharacter.name + ' logo'" />
           <cf-health-bar
             [value]="leftCharacterHealth()"
             [max]="leftCharacter.maxHealth"
@@ -23,11 +23,12 @@
         <div class="w-1/3 flex flex-col justify-center">
           <img
             id="rightCharacterIdleImage"
-            class="-scale-x-100"
+            [class]="'-scale-x-100 ' + rightLoserClass()"
             [src]="rightCharacter.idle"
             [alt]="rightCharacter.name + ' idle sprite'"
           />
           <img
+            [class]="rightLoserClass()"
             [src]="rightCharacter.logo"
             [alt]="rightCharacter.name + ' logo'"
           />

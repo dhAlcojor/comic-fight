@@ -15,15 +15,16 @@ const DELAY = 1000
   imports: [HealthBarComponent, EventComponent, RouterLink, HeaderComponent, HpEventComponent],
   templateUrl: "./fight.component.html",
   styleUrl: "./fight.component.css",
-  animations: [],
 })
 export class FightComponent implements OnInit {
   leftCharacter = DEADPOOL
   leftCharacterHealth = signal(this.leftCharacter.health)
   leftCharacterIdleImage?: HTMLImageElement
+  leftLoserClass = signal("")
   rightCharacter = WOLVERINE
   rightCharacterHealth = signal(this.rightCharacter.health)
   rightCharacterIdleImage?: HTMLImageElement
+  rightLoserClass = signal("")
   currentRound = signal(0)
   roundEvents = signal<RoundEvent[]>([])
   hpEvents = signal<HPEvent[]>([])
@@ -57,6 +58,8 @@ export class FightComponent implements OnInit {
     this.rightCharacterHealth.set(this.rightCharacter.maxHealth)
     this.leftCharacter.canAttack = true
     this.rightCharacter.canAttack = true
+    this.leftLoserClass.set("")
+    this.rightLoserClass.set("")
     this.currentRound.set(0)
     this.roundEvents.set([])
     this.winnerEvent.set(null)
@@ -194,6 +197,14 @@ export class FightComponent implements OnInit {
     damageTexts.forEach((damageText: HTMLElement) => {
       damageText.textContent = ""
     })
+
+    if (this.leftCharacterHealth() === 0) {
+      this.leftLoserClass.set("grayscale")
+    }
+
+    if (this.rightCharacterHealth() === 0) {
+      this.rightLoserClass.set("grayscale")
+    }
   }
 
   showDamage(character: "left" | "right", damage: number) {
