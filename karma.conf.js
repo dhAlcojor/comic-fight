@@ -4,7 +4,10 @@
 module.exports = function (config) {
   config.set({
     basePath: "",
-    files: ["src/**/*.spec.ts"],
+    files: {
+      pattern: "src/**/*.spec.ts",
+      type: "typescript",
+    },
     frameworks: ["jasmine", "@angular-devkit/build-angular"],
     plugins: [
       require("karma-jasmine"),
@@ -25,23 +28,23 @@ module.exports = function (config) {
     jasmineHtmlReporter: {
       suppressAll: true, // removes the duplicated traces
     },
-    check: {
-      global: {
-        statements: 80,
-        branches: 80,
-        functions: 80,
-        lines: 80,
-      },
-    },
     preprocessors: {
-      "src/**/*.ts": ["coverage"],
+      "app/**/*.ts": ["coverage"],
     },
     coverageReporter: {
       dir: require("path").join(__dirname, "./coverage/comic-fight"),
       subdir: ".",
       reporters: [{ type: "html" }, { type: "text" }],
+      check: {
+        global: {
+          statements: 80,
+          branches: 80,
+          functions: 80,
+          lines: 80,
+        },
+      },
     },
-    reporters: ["progress", "kjhtml"],
+    reporters: ["progress", "kjhtml", "coverage"],
     browsers: ["Chrome"],
     restartOnFileChange: true,
   })

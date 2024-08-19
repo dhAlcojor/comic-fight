@@ -1,5 +1,7 @@
 # Comic Fight
 
+[![tests](https://github.com/dhAlcojor/comic-fight/actions/workflows/ci.yml/badge.svg)](https://github.com/dhAlcojor/comic-fight/actions/workflows/ci.yml)
+
 Página creada con Angular 18 como solución del reto de mouredev. A continuación, las instrucciones del reto:
 
 EJERCICIO:
