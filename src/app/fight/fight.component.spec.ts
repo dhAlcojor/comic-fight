@@ -23,7 +23,7 @@ describe('FightComponent', () => {
 
     fixture = TestBed.createComponent(FightComponent)
     component = fixture.componentInstance
-    fightEl = fixture.nativeElement
+    component.showDamage = () => {}
     fixture.detectChanges()
   })
 
@@ -31,6 +31,7 @@ describe('FightComponent', () => {
     component.leftCharacterInitialHealth = 100
     component.rightCharacterInitialHealth = 100
     fixture.detectChanges()
+    component.ngOnInit()
 
     const leftHealthBar = fightEl.querySelector(
       '.left-health-bar',
@@ -44,9 +45,10 @@ describe('FightComponent', () => {
   })
 
   it('should reset the game', async () => {
-    component.leftCharacterInitialHealth = 100
-    component.rightCharacterInitialHealth = 100
+    component.leftCharacterInitialHealth = 200
+    component.rightCharacterInitialHealth = 200
     fixture.detectChanges()
+    component.ngOnInit()
 
     try {
       const resetButton = await waitFor('#resetButton')
@@ -63,7 +65,7 @@ describe('FightComponent', () => {
       '.right-health-bar',
     ) as HTMLElement
 
-    expect(leftHealthBar.textContent).toContain('/ 100')
-    expect(rightHealthBar.textContent).toContain('/ 100')
+    expect(leftHealthBar.textContent).toContain('/ 200')
+    expect(rightHealthBar.textContent).toContain('/ 200')
   }, 30000)
 })
