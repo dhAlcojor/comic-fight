@@ -25,14 +25,6 @@ module.exports = function (config) {
     jasmineHtmlReporter: {
       suppressAll: true, // removes the duplicated traces
     },
-    check: {
-      global: {
-        statements: 80,
-        branches: 80,
-        functions: 80,
-        lines: 80,
-      },
-    },
     preprocessors: {
       "src/**/*.ts": ["coverage"],
     },
@@ -40,6 +32,14 @@ module.exports = function (config) {
       dir: require("path").join(__dirname, "./coverage/comic-fight"),
       subdir: ".",
       reporters: [{ type: "html" }, { type: "text" }],
+      check: {
+        global: {
+          statements: 80,
+          branches: 80,
+          functions: 80,
+          lines: 80,
+        },
+      },
     },
     reporters: ["progress", "kjhtml"],
     browsers: ["Chrome"],
