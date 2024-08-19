@@ -1,4 +1,4 @@
-name: Run tests on pull request
+name: test:ci
 
 # Workflow triggers on pull request events
 on:
