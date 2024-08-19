@@ -1,16 +1,16 @@
 <div class="h-6 relative">
   <!-- Colored background -->
   <div
-    class="absolute inset-0 rounded-lg"
     [style.background-color]="fillColor()"
+    class="colored-background absolute inset-0 rounded-lg"
   ></div>
   <!-- Darken background -->
   <div class="absolute inset-0 bg-black/60 rounded-lg z-10"></div>
   <!-- Fill -->
   <div
-    class="absolute inset-0 rounded-lg z-20"
     [style.background-color]="fillColor()"
     [style.width.%]="fillWidth()"
+    class="fill-background absolute inset-0 rounded-lg z-20"
   ></div>
   <!-- Border -->
   <div

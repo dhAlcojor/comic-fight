@@ -1,21 +1,67 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing"
-import { EventComponent } from "./event.component"
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
+import { EventComponent, RoundEvent } from './event.component'
+import { appConfig } from '../../app.config'
+import { Component } from '@angular/core'
 
-describe("EventComponent", () => {
+const event: RoundEvent = {
+  round: 1,
+  events: [
+    {
+      type: 'attack',
+      attacker: 'Deadpool',
+      defender: 'Wolverine',
+      alignment: 'left',
+      color: 'black',
+      damage: 10,
+      regen: 0,
+    },
+    {
+      type: 'attack',
+      attacker: 'Deadpool',
+      defender: 'Wolverine',
+      alignment: 'left',
+      color: 'black',
+      damage: 10,
+      regen: 0,
+    },
+  ],
+}
+
+describe('EventComponent', () => {
   let component: EventComponent
-  let fixture: ComponentFixture<EventComponent>
+  let fixture: ComponentFixture<TestHostComponent>
+  let testHost: TestHostComponent
+  let eventEl: HTMLElement
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: appConfig.providers,
       imports: [EventComponent],
     }).compileComponents()
+  }))
 
-    fixture = TestBed.createComponent(EventComponent)
-    component = fixture.componentInstance
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestHostComponent)
+    testHost = fixture.componentInstance
+    eventEl = fixture.nativeElement.querySelector('cf-event')
     fixture.detectChanges()
   })
 
-  it("should create", () => {
-    expect(component).toBeTruthy()
+  it('should display the round number', () => {
+    const expectedRound = `Round ${event.round}`
+    expect(eventEl.querySelector('header')?.textContent).toBe(expectedRound)
   })
 })
+
+/*
+ * Test host component to simulate the parent component. This is necessary because the
+ * component uses a required input signal, which is not working on unit tests.
+ */
+@Component({
+  standalone: true,
+  imports: [EventComponent],
+  template: ` <cf-event [event]="event"></cf-event>`,
+})
+class TestHostComponent {
+  event = event
+}
