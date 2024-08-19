@@ -2,60 +2,64 @@
 <span id="rightDamageText" class="damage-text"></span> -->
 <div class="relative">
   @for (hpEvent of hpEvents(); track $index) {
-    <cf-hp-event [hpEvent]="hpEvent" />
+    <cf-hp-event [hpEvent]="hpEvent"/>
   }
 </div>
 <div class="h-svh w-full bg-black">
   <div class="flex flex-col items-center h-full max-w-[480px] mx-auto bg-white">
-    <cf-header class="w-full" />
+    <cf-header class="w-full"/>
     <main class="p-4 flex-1 flex flex-col justify-center items-center overflow-y-hidden">
       <div class="flex justify-around items-end">
         <div class="w-1/3 flex flex-col justify-center">
-          <img id="leftCharacterIdleImage" [class]="leftLoserClass()" [src]="leftCharacter.idle" [alt]="leftCharacter.name + ' idle sprite'" />
-          <img [class]="leftLoserClass()" [src]="leftCharacter.logo" [alt]="leftCharacter.name + ' logo'" />
+          <img [alt]="leftCharacter.name + ' idle sprite'" [class]="leftLoserClass()" [src]="leftCharacter.idle"
+               id="leftCharacterIdleImage"/>
+          <img [alt]="leftCharacter.name + ' logo'" [class]="leftLoserClass()" [src]="leftCharacter.logo"/>
           <cf-health-bar
-            [value]="leftCharacterHealth()"
-            [max]="leftCharacter.maxHealth"
             [fillColor]="leftCharacter.mainColor"
+            [max]="leftCharacter.maxHealth"
+            [value]="leftCharacterHealth()"
+            class="left-health-bar"
           />
         </div>
         <span class="font-fighter text-2xl">VS</span>
         <div class="w-1/3 flex flex-col justify-center">
           <img
-            id="rightCharacterIdleImage"
+            [alt]="rightCharacter.name + ' idle sprite'"
             [class]="'-scale-x-100 ' + rightLoserClass()"
             [src]="rightCharacter.idle"
-            [alt]="rightCharacter.name + ' idle sprite'"
+            id="rightCharacterIdleImage"
           />
           <img
+            [alt]="rightCharacter.name + ' logo'"
             [class]="rightLoserClass()"
             [src]="rightCharacter.logo"
-            [alt]="rightCharacter.name + ' logo'"
           />
           <cf-health-bar
-            [value]="rightCharacterHealth()"
-            [max]="rightCharacter.maxHealth"
             [fillColor]="rightCharacter.mainColor"
+            [max]="rightCharacter.maxHealth"
+            [value]="rightCharacterHealth()"
+            class="right-health-bar"
           />
         </div>
       </div>
       <div class="w-full flex-1 flex flex-col gap-2 mt-4 overflow-y-auto">
         @if (winnerEvent()) {
           @if (winnerEvent()?.attacker?.length === 0) {
-            <p class="font-fighter text-4xl mt-4 text-center text-transparent" [style]="{'background-image': doubleKoBackgroundStyle, 'background-clip': 'text'}">
+            <p class="font-fighter text-4xl mt-4 text-center text-transparent"
+               [style]="{'background-image': doubleKoBackgroundStyle, 'background-clip': 'text'}">
               DOBLE K.O.!
             </p>
           } @else {
             <p
-            [class]="'font-fighter mt-4 text-center'"
-            [style.color]="winnerEvent()?.color"
+              [class]="'font-fighter mt-4 text-center'"
+              [style.color]="winnerEvent()?.color"
             >
               ¡{{ winnerEvent()?.attacker }} ha ganado!
             </p>
           }
         }
         @for (event of roundEvents(); track $index) {
-          <cf-event [event]="event" />
+          <cf-event [event]="event"/>
         }
       </div>
     </main>

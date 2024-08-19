@@ -8,6 +8,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing'
 describe('FightComponent', () => {
   let component: FightComponent
   let fixture: ComponentFixture<FightComponent>
+  let fightEl: HTMLElement
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,10 +22,23 @@ describe('FightComponent', () => {
 
     fixture = TestBed.createComponent(FightComponent)
     component = fixture.componentInstance
+    fightEl = fixture.nativeElement
     fixture.detectChanges()
   })
 
   it('should create', () => {
-    expect(component).toBeTruthy()
+    component.leftCharacterInitialHealth = 100
+    component.rightCharacterInitialHealth = 100
+    fixture.detectChanges()
+
+    const leftHealthBar = fightEl.querySelector(
+      '.left-health-bar',
+    ) as HTMLElement
+    const rightHealthBar = fightEl.querySelector(
+      '.right-health-bar',
+    ) as HTMLElement
+
+    expect(leftHealthBar.textContent).toContain('/ 100')
+    expect(rightHealthBar.textContent).toContain('/ 100')
   })
 })
