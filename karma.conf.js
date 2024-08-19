@@ -33,10 +33,13 @@ module.exports = function (config) {
         lines: 80,
       },
     },
+    preprocessors: {
+      "src/**/*.ts": ["coverage"],
+    },
     coverageReporter: {
       dir: require("path").join(__dirname, "./coverage/comic-fight"),
       subdir: ".",
-      reporters: [{ type: "html" }, { type: "text-summary" }],
+      reporters: [{ type: "html" }, { type: "text" }],
     },
     reporters: ["progress", "kjhtml"],
     browsers: ["Chrome"],

@@ -3,12 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 import { HpEventComponent } from './hp-event.component'
 import { Component } from '@angular/core'
 import { appConfig } from '../../app.config'
-
-const event = {
-  hpChange: 10,
-  left: 10,
-  top: 10,
-}
+import { HPEvent } from '../event/event.component'
 
 describe('HpEventComponent', () => {
   let component: HpEventComponent
@@ -27,11 +22,31 @@ describe('HpEventComponent', () => {
     fixture = TestBed.createComponent(TestHostComponent)
     testHost = fixture.componentInstance
     hpEventEl = fixture.nativeElement.querySelector('cf-hp-event')
-    fixture.detectChanges()
   })
 
-  it('should create the hp event', () => {
+  it('should create the hp regenerate event', () => {
+    testHost.event = {
+      hpChange: 10,
+      left: 10,
+      top: 10,
+    }
+    fixture.detectChanges()
+    const span = hpEventEl.querySelector('span') as HTMLElement
+    expect(span.className).toContain('text-regenerate')
     expect(hpEventEl.textContent).toContain('+10')
+  })
+
+  it('should create the hp damage event', () => {
+    testHost.event = {
+      hpChange: -10,
+      left: 10,
+      top: 10,
+    }
+    fixture.detectChanges()
+    hpEventEl = fixture.nativeElement.querySelector('cf-hp-event')
+    const span = hpEventEl.querySelector('span') as HTMLElement
+    expect(span.className).toContain('text-damage')
+    expect(hpEventEl.textContent).toContain('-10')
   })
 })
 
@@ -45,5 +60,9 @@ describe('HpEventComponent', () => {
   template: ` <cf-hp-event [hpEvent]="event"></cf-hp-event>`,
 })
 class TestHostComponent {
-  event = event
+  event: HPEvent = {
+    hpChange: 0,
+    left: 0,
+    top: 0,
+  }
 }

@@ -1,36 +1,54 @@
-import { Component, ElementRef, Input, OnInit, signal, WritableSignal } from "@angular/core"
-import { RouterLink } from "@angular/router"
-import { Character, DEADPOOL, WOLVERINE } from "../characters/character"
-import { Event, EventComponent, HPEvent, RoundEvent } from "../components/event/event.component"
-import { HealthBarComponent } from "../components/health-bar/health-bar.component"
-import { getRandomFromRange } from "../utils"
-import { HeaderComponent } from "../header/header.component";
-import { HpEventComponent } from "../components/hp-event/hp-event.component";
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core'
+import { RouterLink } from '@angular/router'
+import { Character, DEADPOOL, WOLVERINE } from '../characters/character'
+import {
+  Event,
+  EventComponent,
+  HPEvent,
+  RoundEvent,
+} from '../components/event/event.component'
+import { HealthBarComponent } from '../components/health-bar/health-bar.component'
+import { getRandomFromRange } from '../utils'
+import { HeaderComponent } from '../header/header.component'
+import { HpEventComponent } from '../components/hp-event/hp-event.component'
 
 const DELAY = 1000
 
 @Component({
-  selector: "cf-fight",
+  selector: 'cf-fight',
   standalone: true,
-  imports: [HealthBarComponent, EventComponent, RouterLink, HeaderComponent, HpEventComponent],
-  templateUrl: "./fight.component.html",
-  styleUrl: "./fight.component.css",
+  imports: [
+    HealthBarComponent,
+    EventComponent,
+    RouterLink,
+    HeaderComponent,
+    HpEventComponent,
+  ],
+  templateUrl: './fight.component.html',
+  styleUrl: './fight.component.css',
 })
 export class FightComponent implements OnInit {
   leftCharacter = DEADPOOL
   leftCharacterHealth = signal(this.leftCharacter.health)
-  leftCharacterIdleImage?: HTMLImageElement
-  leftLoserClass = signal("")
+  leftLoserClass = signal('')
   rightCharacter = WOLVERINE
   rightCharacterHealth = signal(this.rightCharacter.health)
-  rightCharacterIdleImage?: HTMLImageElement
-  rightLoserClass = signal("")
+  rightLoserClass = signal('')
   currentRound = signal(0)
   roundEvents = signal<RoundEvent[]>([])
   hpEvents = signal<HPEvent[]>([])
   winnerEvent = signal<Event | null>(null)
   gameOver = signal(false)
   doubleKoBackgroundStyle = `linear-gradient(90deg, ${this.leftCharacter.mainColor} 0%, ${this.rightCharacter.mainColor} 100%)`
+
+  constructor(public elementRef: ElementRef) {}
 
   /** Input parameter read from the URL path */
   @Input()
@@ -46,8 +64,6 @@ export class FightComponent implements OnInit {
     this.rightCharacter.maxHealth = value
   }
 
-  constructor(public elementRef: ElementRef) {}
-
   ngOnInit(): void {
     this.runFight()
   }
@@ -58,8 +74,8 @@ export class FightComponent implements OnInit {
     this.rightCharacterHealth.set(this.rightCharacter.maxHealth)
     this.leftCharacter.canAttack = true
     this.rightCharacter.canAttack = true
-    this.leftLoserClass.set("")
-    this.rightLoserClass.set("")
+    this.leftLoserClass.set('')
+    this.rightLoserClass.set('')
     this.currentRound.set(0)
     this.roundEvents.set([])
     this.winnerEvent.set(null)
@@ -95,10 +111,7 @@ export class FightComponent implements OnInit {
       round: this.currentRound(),
       events: [leftEvent, rightEvent],
     }
-    this.roundEvents.set([
-      roundEvent,
-      ...this.roundEvents(),
-    ])
+    this.roundEvents.set([roundEvent, ...this.roundEvents()])
   }
 
   /**
@@ -113,12 +126,12 @@ export class FightComponent implements OnInit {
     defender: Character,
     defenderHealth: WritableSignal<number>,
   ): Event {
-    const side = attacker === this.leftCharacter ? "left" : "right"
+    const side = attacker === this.leftCharacter ? 'left' : 'right'
     if (attacker.canAttack) {
       const isDodged = Math.random() < defender.dodgeRating
       if (isDodged) {
         return {
-          type: "dodge",
+          type: 'dodge',
           attacker: attacker.name,
           defender: defender.name,
           alignment: side,
@@ -135,10 +148,13 @@ export class FightComponent implements OnInit {
         critical = true
       }
 
-      this.showDamage(attacker === this.leftCharacter ? "right" : "left", -damage)
+      this.showDamage(
+        attacker === this.leftCharacter ? 'right' : 'left',
+        -damage,
+      )
 
       return {
-        type: "attack",
+        type: 'attack',
         attacker: attacker.name,
         defender: defender.name,
         damage,
@@ -148,19 +164,23 @@ export class FightComponent implements OnInit {
       }
     } else {
       attacker.canAttack = true
-      let regen = 0
+      let regen: number
       if (attacker === this.leftCharacter) {
-        regen = Math.floor(this.leftCharacter.maxHealth * attacker.regenerationRating)
-        console.log("regenerating", this.leftCharacterHealth(), regen)
+        regen = Math.floor(
+          this.leftCharacter.maxHealth * attacker.regenerationRating,
+        )
+        console.log('regenerating', this.leftCharacterHealth(), regen)
         this.leftCharacterHealth.set(this.leftCharacterHealth() + regen)
       } else {
-        regen = Math.floor(this.rightCharacter.maxHealth * attacker.regenerationRating)
-        console.log("regenerating", this.rightCharacterHealth(), regen)
+        regen = Math.floor(
+          this.rightCharacter.maxHealth * attacker.regenerationRating,
+        )
+        console.log('regenerating', this.rightCharacterHealth(), regen)
         this.rightCharacterHealth.set(this.rightCharacterHealth() + regen)
       }
       this.showDamage(side, regen)
       return {
-        type: "regenerate",
+        type: 'regenerate',
         attacker: attacker.name,
         defender: defender.name,
         regen,
@@ -173,51 +193,64 @@ export class FightComponent implements OnInit {
   declareWinner() {
     if (this.leftCharacterHealth() === 0 && this.rightCharacterHealth() === 0) {
       const event: Event = {
-        type: "winner",
-        attacker: "",
-        defender: "",
-        alignment: "center",
-        color: "black",
+        type: 'winner',
+        attacker: '',
+        defender: '',
+        alignment: 'center',
+        color: 'black',
       }
       this.winnerEvent.set(event)
       return
     }
 
-    const winner = this.leftCharacterHealth() > 0 ? this.leftCharacter : this.rightCharacter
+    const winner =
+      this.leftCharacterHealth() > 0 ? this.leftCharacter : this.rightCharacter
     const event: Event = {
-      type: "winner",
+      type: 'winner',
       attacker: winner.name,
-      defender: "",
-      alignment: "center",
+      defender: '',
+      alignment: 'center',
       color: winner.mainColor,
     }
     this.winnerEvent.set(event)
-    const damageTexts = this.elementRef.nativeElement.querySelectorAll(".damage-text")
+    const damageTexts =
+      this.elementRef.nativeElement.querySelectorAll('.damage-text')
     damageTexts.forEach((damageText: HTMLElement) => {
-      damageText.textContent = ""
+      damageText.textContent = ''
     })
 
     if (this.leftCharacterHealth() === 0) {
-      this.leftLoserClass.set("grayscale")
+      this.leftLoserClass.set('grayscale')
     }
 
     if (this.rightCharacterHealth() === 0) {
-      this.rightLoserClass.set("grayscale")
+      this.rightLoserClass.set('grayscale')
     }
   }
 
-  showDamage(character: "left" | "right", damage: number) {
+  showDamage(character: 'left' | 'right', damage: number) {
     const el = this.elementRef.nativeElement
-    const image = el.querySelector(`#${character}CharacterIdleImage`) as HTMLImageElement
+    const image = el.querySelector(
+      `#${character}CharacterIdleImage`,
+    ) as HTMLImageElement
     const boundingRect = image.getBoundingClientRect()
     const offset = 20
-    const x = getRandomFromRange(boundingRect.left + offset, boundingRect.right - offset)
-    const y = getRandomFromRange(boundingRect.top + offset, boundingRect.bottom - offset)
-    this.hpEvents.set([...this.hpEvents(), {
-      hpChange: damage,
-      left: x,
-      top: y,
-    }])
+    const x = getRandomFromRange(
+      boundingRect.left + offset,
+      boundingRect.right - offset,
+    )
+    const y = getRandomFromRange(
+      boundingRect.top + offset,
+      boundingRect.bottom - offset,
+    )
+    this.hpEvents.set([
+      ...this.hpEvents(),
+      {
+        hpChange: damage,
+        left: x,
+        top: y,
+      },
+    ])
   }
 
   delay(ms: number) {
