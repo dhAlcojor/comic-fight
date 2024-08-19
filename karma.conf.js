@@ -26,7 +26,7 @@ module.exports = function (config) {
       suppressAll: true, // removes the duplicated traces
     },
     preprocessors: {
-      "src/**/*.ts": ["coverage"],
+      "app/**/*.ts": ["coverage"],
     },
     coverageReporter: {
       dir: require("path").join(__dirname, "./coverage/comic-fight"),
