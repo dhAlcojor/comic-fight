@@ -1,0 +1,43 @@
+name: Run tests on pull request
+
+# Workflow triggers on pull request events
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feature/*'
+      - 'bugfix/*'
+
+jobs:
+  # Job to run tests
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      # Run tests
+      - name: Run tests
+        run: pnpm run test:ci
+
+      # Upload test results (Optional)
+      # If you want to upload test results, you could use actions/upload-artifact@v3
+      # - name: Upload test results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: test-results
+      #     path: path/to/test-results
