@@ -2,12 +2,6 @@ name: test:ci
 
 # Workflow triggers on pull request events
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - 'feature/*'
-      - 'bugfix/*'
   pull_request:
     branches:
       - main
