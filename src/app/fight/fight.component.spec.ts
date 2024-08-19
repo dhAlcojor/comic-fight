@@ -4,6 +4,7 @@ import { FightComponent } from './fight.component'
 import { provideRouter } from '@angular/router'
 import { provideHttpClient } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing'
+import { waitFor } from '../utils'
 
 describe('FightComponent', () => {
   let component: FightComponent
@@ -41,4 +42,28 @@ describe('FightComponent', () => {
     expect(leftHealthBar.textContent).toContain('/ 100')
     expect(rightHealthBar.textContent).toContain('/ 100')
   })
+
+  it('should reset the game', async () => {
+    component.leftCharacterInitialHealth = 100
+    component.rightCharacterInitialHealth = 100
+    fixture.detectChanges()
+
+    try {
+      const resetButton = await waitFor('#resetButton')
+      resetButton.click()
+      fixture.detectChanges()
+    } catch (e) {
+      console.error(e)
+    }
+
+    const leftHealthBar = fightEl.querySelector(
+      '.left-health-bar',
+    ) as HTMLElement
+    const rightHealthBar = fightEl.querySelector(
+      '.right-health-bar',
+    ) as HTMLElement
+
+    expect(leftHealthBar.textContent).toContain('/ 100')
+    expect(rightHealthBar.textContent).toContain('/ 100')
+  }, 30000)
 })
