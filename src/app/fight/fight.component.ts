@@ -15,7 +15,7 @@ import {
   RoundEvent,
 } from '../components/event/event.component'
 import { HealthBarComponent } from '../components/health-bar/health-bar.component'
-import { getRandomFromRange } from '../utils'
+import { clamp, getRandomFromRange } from '../utils'
 import { HeaderComponent } from '../header/header.component'
 import { HpEventComponent } from '../components/hp-event/hp-event.component'
 
@@ -53,15 +53,17 @@ export class FightComponent implements OnInit {
   /** Input parameter read from the URL path */
   @Input()
   set leftCharacterInitialHealth(value: number) {
-    this.leftCharacterHealth.set(value)
-    this.leftCharacter.maxHealth = value
+    const clampedValue = clamp(value, 1, 9999)
+    this.leftCharacterHealth.set(clampedValue)
+    this.leftCharacter.maxHealth = clampedValue
   }
 
   /** Input parameter read from the URL path */
   @Input()
   set rightCharacterInitialHealth(value: number) {
-    this.rightCharacterHealth.set(value)
-    this.rightCharacter.maxHealth = value
+    const clampedValue = clamp(value, 1, 9999)
+    this.rightCharacterHealth.set(clampedValue)
+    this.rightCharacter.maxHealth = clampedValue
   }
 
   ngOnInit(): void {
